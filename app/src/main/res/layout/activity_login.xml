@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".LoginActivity"
+        android:layout_marginTop="50dp">
+
+    <ImageView android:layout_above="@+id/signin_layout" android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:src="@drawable/logo_title"/>
+
+    <LinearLayout android:id="@+id/signin_layout"
+                  android:layout_centerInParent="true"
+                  android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="vertical">
+
+
+        <EditText android:id="@+id/email_edittext"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:hint="@string/email"
+                  android:layout_margin="10dp"/>
+
+        <EditText android:id="@+id/password_edittext"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:hint="@string/password"
+                  android:inputType="textPassword"
+                  android:layout_margin="10dp"/>
+
+        <Button android:id="@+id/login_button"
+                style="@style/ButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/signin"
+                android:theme="@style/ButtonStyle"
+                android:layout_margin="10dp"/>
+
+        <Button android:id="@+id/signup_button"
+                style="@style/ButtonStyle"
+                android:textColor="@color/colorWhite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/signup"
+                android:layout_margin="10dp"/>
+
+        <Button android:id="@+id/facebook_login_button"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/signin_facebook"
+                android:theme="@style/ButtonStyle"
+                android:background="@drawable/btn_signin_facebook"
+                android:layout_margin="10dp"/>
+
+        <Button android:id="@+id/google_sign_in_button"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/signin_google"
+                android:theme="@style/ButtonStyle"
+                android:background="@drawable/btn_signin_google"
+                android:layout_margin="10dp"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
