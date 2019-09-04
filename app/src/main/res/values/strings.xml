@@ -35,9 +35,9 @@
     <string name="profile">Profile</string>
     <string name="count_0">0</string>
     <!-- Alarm -->
-    <string name="alarm_favorite">Liked the press</string>
-    <string name="alarm_comment">left a message</string>
-    <string name="alarm_follow">has started to follow your account</string>
+    <string name="alarm_favorite">" Liked your post.</string>
+    <string name="alarm_comment">" left a comment: "</string>
+    <string name="alarm_follow">" has started to follow your account.</string>
     <!-- Comment -->
     <string name="send">Send</string>
     <!-- Add Photo -->
@@ -48,6 +48,6 @@
     <!-- Toolbar -->
     <string name="back">Back</string>
     <!-- etc -->
-    <item name="visible" type="id"/>
-    <item name="masked" type="id"/>
+    <item name="visible" type="id" />
+    <item name="masked" type="id" />
 </resources>
