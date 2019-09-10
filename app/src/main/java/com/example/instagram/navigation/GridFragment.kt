@@ -56,8 +56,17 @@ class GridFragment : Fragment() {
         }
 
         override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
-            var imageview = (p0 as CustomViewHolder).imageview
-            Glide.with(p0.itemView.context).load(contentDTOs[p1].imageUrl).apply(RequestOptions().centerCrop()).into(imageview)
+            var imageView = (p0 as CustomViewHolder).imageview
+            Glide.with(p0.itemView.context).load(contentDTOs[p1].imageUrl).apply(RequestOptions().centerCrop()).into(imageView)
+            imageView.setOnClickListener {
+                val fragment = UserFragment()
+                val bundle = Bundle()
+                bundle.putString("destinationUid", contentDTOs[p1].uid)
+                bundle.putString("userId", contentDTOs[p1].userId)
+
+                fragment.arguments = bundle
+                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content, fragment)?.commit()
+            }
         }
     }
 }

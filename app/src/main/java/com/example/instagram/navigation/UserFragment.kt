@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -36,6 +37,7 @@ class UserFragment : Fragment() {
     companion object {
         var PICK_PROFILE_FROM_ALBUM = 10
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         fragmentView = LayoutInflater.from(activity).inflate(R.layout.fragment_user, container, false)
         uid = arguments?.getString("destinationUid")
@@ -78,7 +80,8 @@ class UserFragment : Fragment() {
         getFollowerAndFollowing()
         return fragmentView
     }
-    fun getFollowerAndFollowing() {
+
+    private fun getFollowerAndFollowing() {
         firestore?.collection("users")?.document(uid!!)?.addSnapshotListener {
             documentSnapshot, firebaseFirestoreException ->
             if(documentSnapshot == null) return@addSnapshotListener
@@ -101,7 +104,7 @@ class UserFragment : Fragment() {
             }
         }
     }
-    fun requestFollow() {
+    private fun requestFollow() {
         //Saving data to my account
         var tsDocFollowing = firestore?.collection("users")?.document(currentUserUid!!)
         firestore?.runTransaction { transaction ->
@@ -109,19 +112,21 @@ class UserFragment : Fragment() {
             if (followDTO == null) {
                 followDTO = FollowDTO()
                 followDTO!!.followingCount = 1
-                followDTO!!.followers[uid!!] = true
+                followDTO!!.followings[uid!!] = true
 
                 transaction.set(tsDocFollowing, followDTO)
                 return@runTransaction
             }
 
-            if(followDTO.followings.containsKey(uid)) {
+            if(followDTO?.followings?.containsKey(uid)!!) {
                 //It removes following third person when a third person follow me
                 followDTO?.followingCount = followDTO?.followingCount - 1
-                followDTO?.followers?.remove(uid)
+                followDTO?.followings?.remove(uid)
+            } else {
                 //It adds following third person when a third person follow me
                 followDTO?.followingCount = followDTO?.followingCount + 1
-                followDTO?.followers[uid!!] = true
+                followDTO?.followings[uid!!] = true
+                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollowing, followDTO)
             return@runTransaction
@@ -146,13 +151,12 @@ class UserFragment : Fragment() {
                 //It add my follower when I don't follow a third person
                 followDTO!!.followerCount = followDTO!!.followerCount + 1
                 followDTO!!.followers[currentUserUid!!] = true
-                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollower, followDTO!!)
             return@runTransaction
         }
     }
-    fun followerAlarm(destinationUid : String) {
+    private fun followerAlarm(destinationUid : String) {
         var alarmDTO = AlarmDTO()
         alarmDTO.destinationUid = destinationUid
         alarmDTO.userId = auth?.currentUser?.email
@@ -162,7 +166,7 @@ class UserFragment : Fragment() {
         FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
     }
 
-    fun getProfileImage() {
+    private fun getProfileImage() {
         firestore?.collection("profileImages")?.document(uid!!)?.addSnapshotListener {
             documentSnapshot, firebaseFirestoreException ->
             if (documentSnapshot == null) return@addSnapshotListener

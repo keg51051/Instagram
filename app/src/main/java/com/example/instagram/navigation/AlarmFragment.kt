@@ -27,17 +27,17 @@ class AlarmFragment : Fragment() {
     }
 
     inner class AlarmRecyclerViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-        val alarmDTOList = ArrayList<AlarmDTO>()
+        private val alarmDTOList = ArrayList<AlarmDTO>()
 
         init {
             var uid = FirebaseAuth.getInstance().currentUser!!.uid
-            FirebaseFirestore.getInstance().collection("alarms").whereEqualTo("destinationUid", uid).orderBy("timestamp").addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+            FirebaseFirestore.getInstance().collection("alarms").whereEqualTo("destinationUid", uid).orderBy("timestamp").addSnapshotListener { querySnapshot, _ ->
                 alarmDTOList.clear()
                 if(querySnapshot == null) return@addSnapshotListener
-                for(snapshot in querySnapshot.documents!!) {
+                for(snapshot in querySnapshot.documents) {
                     alarmDTOList.add(snapshot.toObject(AlarmDTO::class.java)!!)
                 }
-                alarmDTOList.sortBy { it.timestamp }
+                alarmDTOList.sortByDescending { it.timestamp }
                 notifyDataSetChanged()
             }
         }
@@ -59,21 +59,23 @@ class AlarmFragment : Fragment() {
 
             when (alarmDTOList[position].kind) {
                 0 -> {
-                    val str_0 = alarmDTOList[position].userId + getString(R.string.alarm_favorite)
-                    commentTextView.text = str_0
+                    if (alarmDTOList[position].userId != FirebaseAuth.getInstance().currentUser?.email) {
+                        val str0 = alarmDTOList[position].userId + getString(R.string.alarm_favorite)
+                        commentTextView.text = str0
+                    }
                 }
                 1 -> {
-                    var str_1 = alarmDTOList[position].userId + getString(R.string.alarm_comment) +
-                            alarmDTOList[position].message
-                    commentTextView.text = str_1
+                    if (alarmDTOList[position].userId != FirebaseAuth.getInstance().currentUser?.email) {
+                        var str1 = alarmDTOList[position].userId + getString(R.string.alarm_comment) +
+                                alarmDTOList[position].message
+                        commentTextView.text = str1
+                    }
                 }
                 2 -> {
-                    val str_2 = alarmDTOList[position].userId + getString(R.string.alarm_follow)
-                    commentTextView.text = str_2
+                        val str2 = alarmDTOList[position].userId + getString(R.string.alarm_follow)
+                        commentTextView.text = str2
                 }
             }
-
         }
-
     }
 }
